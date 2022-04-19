@@ -1,4 +1,4 @@
-##  本脚本](https://greasyfork.org/zh-CN/scripts/443476)
+##  [本脚本](https://greasyfork.org/zh-CN/scripts/443476)
 
 ## 功能介绍
 
