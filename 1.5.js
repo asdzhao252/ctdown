@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         免登录城通网盘直链快速下载 精简页面
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.5
 // @description  全网首发城通网盘免登录直链快速下载插件 有什么问题请在评论里说
 // @author       ddpp
 // @match        *://*/*
@@ -11,13 +11,13 @@
 // @grant        GM_xmlhttpRequest
 // @connect      api.bilibili.com
 // @license MIT
- 
+
 // ==/UserScript==
 /* globals file_id */
 /* globals code */
 (function () {
   "use strict";
- 
+
   //请求获取运营商 以获取最快速率
   GM_xmlhttpRequest({
     method: "get",
@@ -25,7 +25,7 @@
     headers: {
       "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"
     },
- 
+
     onload: function (response) {
       var name = response.responseText;
       var isp = name.match(/"isp":"(\S*)","l/)[1];
@@ -38,7 +38,7 @@
       console.log("请求失败");
     }
   });
- 
+
   function Download(content) {
     var eleLink = document.createElement("a");
     eleLink.style.display = "none";
@@ -68,7 +68,7 @@
       typeof selectorOrFunction === "function"
         ? selectorOrFunction()
         : document.querySelectorAll(selectorOrFunction);
- 
+
     var targetsFound = targetNodes && targetNodes.length > 0;
     if (targetsFound) {
       targetNodes.forEach(function (targetNode) {
@@ -84,7 +84,7 @@
         }
       });
     }
- 
+
     if (maxIntervals !== 0 && !(targetsFound && waitOnce)) {
       maxIntervals -= 1;
       setTimeout(function () {
@@ -98,7 +98,7 @@
       }, interval);
     }
   }
- 
+
   //判断是否为手机页面
   function mobile() {
     //判断数值是否存在
@@ -249,7 +249,7 @@
     }
     waitForKeyElements(' [class="btn btn-outline-secondary fs-1 mt-3"]', down);
   }
- 
+
   //当检测为目录界面时执行的代码
   if (window.location.pathname.split("/")[1].indexOf("d") == 0) {
     //判断是否为电脑节目
@@ -285,6 +285,18 @@
         document.getElementsByClassName("nav-item")[0].style.display = "none";
       }
       waitForKeyElements(' [class="nav-item"]', searchad);
+    }
+    //判断是否为手机界面
+    if (GM_getValue("mobile").mode === "1") {
+      //去除搜索广告
+      function searchad() {
+        document.getElementsByClassName(
+          "btn btn-warning btn-sm"
+        )[0].style.display = "none";
+        document.getElementsByClassName("btn btn-info btn-sm")[0].style =
+          "position: absolute;bottom: 0px;right: 0px;";
+      }
+      waitForKeyElements(' [class="btn btn-warning btn-sm"]', searchad);
     }
   }
 })();
