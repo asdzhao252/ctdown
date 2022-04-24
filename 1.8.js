@@ -1,43 +1,19 @@
 // ==UserScript==
 // @name         免登录城通网盘直链快速下载 精简页面
 // @namespace    http://tampermonkey.net/
-// @version      1.6
+// @version      1.8
 // @description  全网首发城通网盘免登录直链快速下载插件 有什么问题请在评论里说
 // @author       ddpp
 // @match        *://*/*
 // @icon         https://webapi.ctfile.com/assets/img/favicons/mstile-150x150.png
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @grant        GM_xmlhttpRequest
-// @connect      www.mxnzp.com
 // @license MIT
  
 // ==/UserScript==
 /* globals file_id */
-/* globals code */
 (function () {
   "use strict";
- 
-  //请求获取运营商 以获取最快速率
-  GM_xmlhttpRequest({
-    method: "get",
-    url: "https://www.mxnzp.com/api/ip/self?app_id=arqvlfohturlgfzj&app_secret=OWw4T0JaWCtNNnNOcGVRVHgyNFVnUT09",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"
-    },
- 
-    onload: function (response) {
-      var name = response.responseText;
-      var isp = name.match(/"isp":"(\S*)","/)[1];
-      var ispwrite = {
-        isp: isp
-      };
-      GM_setValue("isp", ispwrite);
-    },
-    onerror: function (response) {
-      console.log("请求失败");
-    }
-  });
  
   function Download(content) {
     var eleLink = document.createElement("a");
@@ -238,14 +214,33 @@
     function down() {
       document.getElementsByClassName(
         "btn btn-outline-secondary fs-1 mt-3"
-      )[0].onclick = function yddown() {
-        var downurl =
-          "https://apid1.ctfile.workers.dev/" +
-          GM_getValue("isp").isp +
-          "/?file=" +
-          file_id;
+      )[0].innerText = "电信下载";
+      document.getElementsByClassName(
+        "btn btn-outline-secondary fs-1 mt-3"
+      )[0].onclick = function () {
+        var downurl = "https://apid1.ctfile.workers.dev/电信/?file=" + file_id;
         Download(downurl);
       };
+      let lt = document.createElement("a");
+      lt.innerText = "联通下载";
+      lt.className = "btn btn-outline-secondary fs-1 mt-3";
+      lt.onclick = function () {
+        var downurl = "https://apid1.ctfile.workers.dev/联通/?file=" + file_id;
+        Download(downurl);
+      };
+      document
+        .getElementsByClassName("card-body position-relative")[0]
+        .append(lt);
+      let yd = document.createElement("a");
+      yd.innerText = "移动下载";
+      yd.className = "btn btn-outline-secondary fs-1 mt-3";
+      yd.onclick = function () {
+        var downurl = "https://apid1.ctfile.workers.dev/移动/?file=" + file_id;
+        Download(downurl);
+      };
+      document
+        .getElementsByClassName("card-body position-relative")[0]
+        .append(yd);
     }
     waitForKeyElements(' [class="btn btn-outline-secondary fs-1 mt-3"]', down);
   }
