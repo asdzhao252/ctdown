@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         免登录城通网盘直链快速下载 精简页面
 // @namespace    http://tampermonkey.net/
-// @version      1.8
+// @version      1.9
 // @description  全网首发城通网盘免登录直链快速下载插件 有什么问题请在评论里说
 // @author       ddpp
 // @match        *://*/*
@@ -14,6 +14,9 @@
 /* globals file_id */
 (function () {
   "use strict";
+    var getlink
+    var dlURL
+    var downurl
  
   function Download(content) {
     var eleLink = document.createElement("a");
@@ -23,6 +26,56 @@
     eleLink.click();
     document.body.removeChild(eleLink);
   }
+ 
+   var getdx = function() {
+     getlink = new XMLHttpRequest();
+    getlink.onreadystatechange = function() {
+        if (getlink.readyState == 4) {
+            if (getlink.status == 200) {
+                dlURL = getlink.responseText
+                Download(dlURL);
+            } else {
+                alert("请求失败 网路不佳")
+            }
+        }
+    };
+    downurl = "https://api1.ctfile.workers.dev/电信/?file=" + file_id
+    getlink.open('get', downurl);
+    getlink.send(null);
+}
+     var getlt = function() {
+     getlink = new XMLHttpRequest();
+    getlink.onreadystatechange = function() {
+        if (getlink.readyState == 4) {
+            if (getlink.status == 200) {
+                dlURL = getlink.responseText
+                Download(dlURL);
+            } else {
+                alert("请求失败 网路不佳")
+            }
+        }
+    };
+    downurl = "https://api1.ctfile.workers.dev/联通/?file=" + file_id
+    getlink.open('get', downurl);
+    getlink.send(null);
+}
+        var getyd = function() {
+     getlink = new XMLHttpRequest();
+    getlink.onreadystatechange = function() {
+        if (getlink.readyState == 4) {
+            if (getlink.status == 200) {
+                dlURL = getlink.responseText
+                Download(dlURL);
+            } else {
+                alert("请求失败 网路不佳")
+            }
+        }
+    };
+    downurl = "https://api1.ctfile.workers.dev/移动/?file=" + file_id
+    getlink.open('get', downurl);
+    getlink.send(null);
+}
+ 
   //等待元素加载完毕
   function waitForKeyElements(
     selectorOrFunction,
@@ -162,8 +215,7 @@
           "btn btn-outline-secondary fs-1 mt-3"
         )[0].onclick = function dxdown() {
           var downurl =
-            "https://apid1.ctfile.workers.dev/电信/?file=" + file_id;
-          Download(downurl);
+        getdx()
         };
       }
       waitForKeyElements(
@@ -174,9 +226,7 @@
         document.getElementsByClassName(
           "btn btn-outline-info fs-1 mt-3"
         )[0].onclick = function ltdown() {
-          var downurl =
-            "https://apid1.ctfile.workers.dev/联通/?file=" + file_id;
-          Download(downurl);
+        getlt()
         };
       }
       waitForKeyElements(' [class="btn btn-outline-info fs-1 mt-3"]', ltdown);
@@ -185,8 +235,7 @@
           "btn btn-outline-dark fs-1 mt-3"
         )[0].onclick = function yddown() {
           var downurl =
-            "https://apid1.ctfile.workers.dev/移动/?file=" + file_id;
-          Download(downurl);
+        getyd()
         };
       }
       waitForKeyElements(' [class="btn btn-outline-dark fs-1 mt-3"]', yddown);
@@ -218,15 +267,13 @@
       document.getElementsByClassName(
         "btn btn-outline-secondary fs-1 mt-3"
       )[0].onclick = function () {
-        var downurl = "https://apid1.ctfile.workers.dev/电信/?file=" + file_id;
-        Download(downurl);
+        getdx()
       };
       let lt = document.createElement("a");
       lt.innerText = "联通下载";
       lt.className = "btn btn-outline-secondary fs-1 mt-3";
       lt.onclick = function () {
-        var downurl = "https://apid1.ctfile.workers.dev/联通/?file=" + file_id;
-        Download(downurl);
+        getlt()
       };
       document
         .getElementsByClassName("card-body position-relative")[0]
@@ -235,8 +282,7 @@
       yd.innerText = "移动下载";
       yd.className = "btn btn-outline-secondary fs-1 mt-3";
       yd.onclick = function () {
-        var downurl = "https://apid1.ctfile.workers.dev/移动/?file=" + file_id;
-        Download(downurl);
+        getyd()
       };
       document
         .getElementsByClassName("card-body position-relative")[0]
