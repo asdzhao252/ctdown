@@ -1,4 +1,4 @@
-##  本脚本](https://greasyfork.org/zh-CN/scripts/443476)
+##  [本脚本](https://greasyfork.org/zh-CN/scripts/443476)
 
 最新版本已取消查询宽带运营商 欢迎监督 脚本全源
 
